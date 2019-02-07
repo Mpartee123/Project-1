@@ -2,16 +2,17 @@ body{background-color: black}
 #title{
     font-family: 'Raleway', sans-serif;
     color: rgb(38, 156, 224);
-    font-size:4rem;
-    width: 80%;
-    margin: 0 auto;
+    font-size:15vw;
+
+    
 }
 .icon{
-    width: 40%;
-    position: absolute;
+    height: 20vw;
+    
+    
 }
 #food{
-    top: 
+    
 }
 
 
@@ -19,6 +20,6 @@ body{background-color: black}
 
 }
 
-#masks{
+#entertainment{
 
 }
