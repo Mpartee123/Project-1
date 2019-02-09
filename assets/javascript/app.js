@@ -56,19 +56,25 @@ function showPosition(position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
     userLocation.userLatitude = latitude;
-    userLocation.uerLongitude = longitude;
+    userLocation.userLongitude = longitude;
+    
 }
 getLocation();
 
 
+
+function googlePlaces () {
 var apiKey = 'AIzaSyCUM6ziq10bpobC1rqrO3O9LGJwgzUTJEA';  //Alex's key
 //test example Url found in google places documentation page
 //second attempt
-var queryURL = 'https://cors-anywhere.herokuapp.com/' + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=' + apiKey;
 
+//var queryURL = 'https://cors-anywhere.herokuapp.com/' + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?' + userLocation.userLatitude + ',' + userLocation.userLongitude + '&radius=1500&type=restaurant&keyword=cruise&key=' + apiKey;
+var queryURL = 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=30.281989900000003,-97.736249&radius=1000&type=restaurant&keyword=mexican&key= AIzaSyCUM6ziq10bpobC1rqrO3O9LGJwgzUTJEA';
 $.ajax({
     url: queryURL,
     method: 'GET',
 }).then(function(response) {
     console.log(response);
 }); 
+};
+
