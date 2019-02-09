@@ -1,5 +1,5 @@
 
-//function to render main screen
+//function to render main screenn
 function renderMain(){
     //render title
     var titleDiv = $('<div>').addClass('mx-auto mt-4').attr('id', 'title').text('Wait It Out');
