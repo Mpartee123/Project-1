@@ -7,7 +7,7 @@ function renderMain(){
     //render category icons
     for(var i = 0; i < 3; i++){
         var cats = ['food', 'shopping', 'entertainment']
-        var srcs = ['assets/images/food_icon.png', 'assets/images/cart.png', 'assets/images/masks2.png']
+        var srcs = ['assets/images/food_icon.png', 'assets/Images/cart.png', 'assets/images/masks2.png']
         //create row div and img, and append img to row and row to #main
         var row = $('<div>').addClass('row').attr('id', 'row'+ i)
         //append img to row
