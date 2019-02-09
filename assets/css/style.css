@@ -1,4 +1,6 @@
-body{background-color: black}
+body{background-color: black;
+color: white;
+}
 #title{
     font-family: 'Raleway', sans-serif;
     color: rgb(38, 156, 224);
@@ -10,16 +12,4 @@ body{background-color: black}
     height: 20vw;
     
     
-}
-#food{
-    
-}
-
-
-#shopping{
-
-}
-
-#entertainment{
-
 }
