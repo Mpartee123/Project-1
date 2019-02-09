@@ -5,14 +5,14 @@ color: white;
     font-family: 'Raleway', sans-serif;
     color: rgb(38, 156, 224);
     font-size:15vw;
-
-    
 }
 .icon{
     height: 20vw;
     
     
 }
-.sub{
+.sub,
+.option{
     font-size: 12vw;
 }
+
