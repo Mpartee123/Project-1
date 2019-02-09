@@ -59,3 +59,16 @@ function showPosition(position) {
     userLocation.uerLongitude = longitude;
 }
 getLocation();
+
+
+var apiKey = 'AIzaSyCUM6ziq10bpobC1rqrO3O9LGJwgzUTJEA';  //Alex's key
+//test example Url found in google places documentation page
+//second attempt
+var queryURL = 'https://cors-anywhere.herokuapp.com/' + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=' + apiKey;
+
+$.ajax({
+    url: queryURL,
+    method: 'GET',
+}).then(function(response) {
+    console.log(response);
+}); 
