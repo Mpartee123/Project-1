@@ -48,14 +48,13 @@ $('.icon').on('click', function () {
             userSelection.subCategorySelection = $(this).attr('id');
             console.log(userSelection);
             googleApiCall();
+
         })
     }
 });
 
 
- $('.subcategory').on('click', function () {
-     alert('subcategory click event has been triggered');
- });
+
 
  $('.subcategory').on('click',function () {
      userSelection.subcategorySelection=$(this).id;
@@ -66,11 +65,13 @@ $('.icon').on('click', function () {
 
 
 
+
 //modal functionality
 var modal = document.getElementById('simpleModal');
 var modalBtn = $('#modalBtn');
 var closeBtn = $('#closeBtn');
 $('#modalBtn').on('click', openModal);
+
 function openModal(){
     modal.style.display = "block";
 }
@@ -81,6 +82,7 @@ $('#closeBtn').on('click', closeModal);
 window.addEventListener('click', clickOutside);
 function clickOutside(e){
     if(e.target == modal){
+
         modal.style.display = "none";
     }
 }
@@ -104,7 +106,12 @@ function showPosition(position) {
     userLocation.userLatitude = latitude;
     userLocation.userLongitude = longitude;
 }
-getLocation(); 
+
+getLocation();
+
+var destination;
+
+
 
 
 function googleApiCall() {
@@ -130,29 +137,67 @@ function googleApiCall() {
         $('#main').empty();
         $('#title').text("Take Me To...").css("font-size", "12vw");
         for (i = 0; i < 3; i++) {
-            // console.log(response.results[i].vicinity);
-            // console.log(response.results[i].geometry.location);
-            // console.log(response.results[i].name);
-            // console.log(response.results[i].place_id);
-            var result = $('<div class= "option mx-auto mt-3">');
+
+
+            var result = $('<div>');
             result.attr('placeId', response.results[i].place_id);
             result.attr('latitude', response.results[i].geometry.location.lat);
             result.attr('longitude', response.results[i].geometry.location.lng);
             var name = $('<div class="nameDiv">');
             var locationInformation = $('<div class="localeInfo">');
             name.append(response.results[i].name);
-            // locationInformation.append($('<br>'));
             locationInformation.append(response.results[i].vicinity);
             result.append(name);
             result.append(locationInformation);
             var row = $('<div>').addClass('row');
             row.append(result)
+            result.click(function () {
+                $('#main').empty();
+                // userSelection.subCategorySelection = $(this).attr('id');
+                console.log("working");
+                destination = $(this).attr('placeid');
+                console.log(destination);
+                //    declaring map variable
+                var map
+                    // GEO
+                ,infoWindow;
+                //    starting directions services 
+                var directionsDisplay = new google.maps.DirectionsRenderer();
+                var directionsService = new google.maps.DirectionsService();
+
+                //    making sure that map is being read
+                console.log("the map is responding but not displaying")
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: userLocation.userLatitude, lng: userLocation.userLongitude },
+                    zoom: 15
+                });
+                //    updates the content of the map
+                infoWindow = new google.maps.InfoWindow;
+                //    will display direcitons on map
+                directionsDisplay.setMap(map);
+                function calculateRoute() {
+                    // input locations here ( need to check why it won get the coordinates)
+                    var request = {
+                        origin: { lat: userLocation.userLatitude, lng: userLocation.userLongitude },
+                        destination: { placeId: destination },
+                        travelMode: 'DRIVING'
+                    };
+                    // displays the locations object in map
+                    directionsService.route(request, function (result, status) {
+                        console.log("im alive just not displaying");
+                        console.log(result, status);
+                        if (status == "OK") {
+                            directionsDisplay.setDirections(result);
+                        }
+                    })
+                }
+                // calls the direction to the map
+                calculateRoute();
+            })
+
             $('#main').append(result);
-            //     var subText = subCategories[clickedIcon][i];
-            // var row = $('<div>').addClass('row');
-            // var subDiv = $('<div>').text(subText).addClass('sub mx-auto mt-5').attr('id', subText);
-            // $('#main').append(row);
-            // row.append(subDiv);
+            
         }
     })
 }
