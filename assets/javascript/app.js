@@ -140,7 +140,7 @@ function googleApiCall() {
             result.append(name);
             result.append(locationInformation);
             var row = $('<div>').addClass('row');
-            row.append(result)
+            row.append(result);
             result.click(function () {
                 $('#main').empty();
                 // userSelection.subCategorySelection = $(this).attr('id');
