@@ -75,18 +75,36 @@ $(document).on('click', ".sub", function () {
     }
 });
 
+//modal functionality
+var modal = document.getElementById('simpleModal');
+var modalBtn = $('#modalBtn');
+var closeBtn = $('#closeBtn');
+$('#modalBtn').on('click', openModal);
+function openModal(){
+    modal.style.display = "block";
+}
+$('#closeBtn').on('click', closeModal);
+    function closeModal(){
+    modal.style.display = "none";
+}
+window.addEventListener('click', clickOutside);
+function clickOutside(e){
+    if(e.target == modal){
+        modal.style.display = "none";
+    }
+}
 // Log location Data
-//todo alert needs to be changed to a modal
-
+//Done-todo alert needs to be changed to a modal
 var userLocation = {};
 
-(function () {
+//getLocation was messed up, so I fixed it (I think).  Someone check to see if this is correct: -Mark
+function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else {
-        alert("Geolocation is not supported by this browser.");
+        openModal()
     }
-})();
+};
 
 function showPosition(position) {
     var latitude = position.coords.latitude;
@@ -94,6 +112,7 @@ function showPosition(position) {
     userLocation.userLatitude = latitude;
     userLocation.userLongitude = longitude;
 }
+getLocation(); 
 
 function googleApiCall() {
     console.log('making api call');
