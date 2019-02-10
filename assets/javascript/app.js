@@ -1,4 +1,3 @@
-
 //function to render main screen
 function renderMain() {
     //render title
@@ -12,10 +11,12 @@ function renderMain() {
         var row = $('<div>').addClass('row').attr('id', 'row' + i);
         //append img to row
         var image = $('<img>').addClass('mx-auto mt-5  icon').attr({ 'id': cats[i], 'src': srcs[i] });
+
         row.append(image);
         $('#main').append(row);
     }
 }
+
 renderMain();
 
 //click on icon to show subcategories
@@ -24,6 +25,7 @@ $('.icon').on('click', function () {
     $('#title').text("I'm in the mood for...").css("font-size", "8vw");
     // var to store subcategories
     var subCategories = {
+
         Food: ['Italian', 'Thai', 'American'],
         Shopping: ['Groceries', 'General', 'Mall'],
         Entertainment: ['Movie', 'Bar', 'Yoga']
@@ -94,30 +96,58 @@ function clickOutside(e){
 // Log location Data
 //Done-todo alert needs to be changed to a modal
 var userLocation = {};
+
+//getLocation was messed up, so I fixed it (I think).  Someone check to see if this is correct: -Mark
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else {
         openModal()
     }
-}
+};
+
 function showPosition(position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
     userLocation.userLatitude = latitude;
-    userLocation.uerLongitude = longitude;
+    userLocation.userLongitude = longitude;
 }
-// getLocation(); don't forget to uncomment this!!
+getLocation(); 
 
+function googleApiCall() {
+    console.log('making api call');
+    var type = 'reasturant';
+    var subcategory='mexican';
+    var url = 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?';
+    var apiKey = 'AIzaSyCUM6ziq10bpobC1rqrO3O9LGJwgzUTJEA';
+    var combinedLocation= userLocation.userLatitude+","+userLocation.userLongitude;
+    $.ajax(url, {
+        data: {
+            'key': apiKey,
+            'location': combinedLocation,
+            'radius': 10000,
+            'keyword': subcategory,
+            'type': type,
+        }
 
-var apiKey = 'AIzaSyCUM6ziq10bpobC1rqrO3O9LGJwgzUTJEA';  //Alex's key
-//test example Url found in google places documentation page
-//second attempt
-var queryURL = 'https://cors-anywhere.herokuapp.com/' + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=' + apiKey;
-
-$.ajax({
-    url: queryURL,
-    method: 'GET',
-}).then(function (response) {
-    console.log(response);
-}); 
+    }).then(function (response) {
+        console.log(response);
+        $('#main').empty();
+        for ( i = 0; i < 3; i++ ){
+            // console.log(response.results[i].vicinity);
+            // console.log(response.results[i].geometry.location);
+            // console.log(response.results[i].name);
+            // console.log(response.results[i].place_id);
+            var result =$('<div datatype="">');
+            result.attr('placeId', response.results[i].place_id);
+            result.attr('latitude', response.results[i].geometry.location.lat);
+            result.attr('longitude', response.results[i].geometry.location.lng);
+            var locationInformation= $('<p>');
+            locationInformation.append(response.results[i].name);
+            locationInformation.append($('<br>'));
+            locationInformation.append(response.results[i].vicinity);
+            result.append(locationInformation);
+            $('#main').append(result);
+        }
+    })
+}
