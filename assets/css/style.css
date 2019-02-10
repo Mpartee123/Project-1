@@ -9,10 +9,10 @@ color: white;
 .icon{
     height: 20vw;
 }
-.sub,
-.option{
+.sub{
     font-size: 12vw;
 }
+
 #geo-modal{
     align-items: center;
     width: 70%;
@@ -79,5 +79,23 @@ color: white;
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+.option{
+  border: 1px solid rgb(38, 156, 224);
+  padding: 13px;
+  width: 80%;
+  border-radius: 5px;
+  background-color: rgb(16, 60, 85);
+  text-align: center;
+}
+.localeInfo{
+    font-size: 4vw;
+}
+
+.nameDiv{
+    font-size:6vw;
+}
+#home-btn{
+    width: 10%;
 }
 

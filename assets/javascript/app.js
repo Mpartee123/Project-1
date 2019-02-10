@@ -10,7 +10,7 @@ function renderMain() {
         //create row div and img, and append img to row and row to #main
         var row = $('<div>').addClass('row').attr('id', 'row' + i);
         //append img to row
-        var image = $('<img>').addClass('mx-auto mt-5  icon').attr({ 'id': cats[i], 'src': srcs[i] });
+        var image = $('<img>').addClass('mx-auto mt-5  icon hvr-pulse-grow').attr({ 'id': cats[i], 'src': srcs[i] });
 
         row.append(image);
         $('#main').append(row);
@@ -128,21 +128,34 @@ function googleApiCall() {
     }).then(function (response) {
         console.log(response);
         $('#main').empty();
+        $('#title').text("Take Me To...").css("font-size", "12vw");
         for (i = 0; i < 3; i++) {
             // console.log(response.results[i].vicinity);
             // console.log(response.results[i].geometry.location);
             // console.log(response.results[i].name);
             // console.log(response.results[i].place_id);
-            var result = $('<div datatype="">');
+            var result = $('<div class= "option mx-auto mt-3">');
             result.attr('placeId', response.results[i].place_id);
             result.attr('latitude', response.results[i].geometry.location.lat);
             result.attr('longitude', response.results[i].geometry.location.lng);
-            var locationInformation = $('<p>');
-            locationInformation.append(response.results[i].name);
-            locationInformation.append($('<br>'));
+            var name = $('<div class="nameDiv">');
+            var locationInformation = $('<div class="localeInfo">');
+            name.append(response.results[i].name);
+            // locationInformation.append($('<br>'));
             locationInformation.append(response.results[i].vicinity);
+            result.append(name);
             result.append(locationInformation);
+            var row = $('<div>').addClass('row');
+            row.append(result)
             $('#main').append(result);
+            //     var subText = subCategories[clickedIcon][i];
+            // var row = $('<div>').addClass('row');
+            // var subDiv = $('<div>').text(subText).addClass('sub mx-auto mt-5').attr('id', subText);
+            // $('#main').append(row);
+            // row.append(subDiv);
         }
     })
 }
+
+
+
