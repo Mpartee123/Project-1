@@ -10,8 +10,7 @@ function renderMain() {
         //create row div and img, and append img to row and row to #main
         var row = $('<div>').addClass('row').attr('id', 'row' + i);
         //append img to row
-        var image = $('<img>').addClass('mx-auto mt-5  icon').attr({ 'id': cats[i], 'src': srcs[i] });
-
+        var image = $('<img>').addClass('mx-auto mt-5  icon hvr-pulse-grow').attr({'id': cats[i], 'src': srcs[i]});
         row.append(image);
         $('#main').append(row);
     }
@@ -41,62 +40,60 @@ $('.icon').on('click', function () {
     for (let i = 0; i < 3; i++) {
         var subText = subCategories[clickedIcon][i];
         var row = $('<div>').addClass('row');
-        var subDiv = $('<div>').text(subText).addClass('sub mx-auto mt-5').attr('id', subText);
+        // var subDiv = $('<div>').text(subText).addClass('sub mx-auto mt-5').attr('id', subText);
+        var subDiv = $('<div>').text(subText).addClass('sub option').attr('id', subText);
         $('#main').append(row);
         row.append(subDiv);
         subDiv.click(function () {
             userSelection.subCategorySelection = $(this).attr('id');
             console.log(userSelection);
             googleApiCall();
+
         })
     }
 });
 
-
- $('.subcategory').on('click', function () {
-     alert('subcategory click event has been triggered');
- });
-
- $('.subcategory').on('click',function () {
-     userSelection.subcategorySelection=$(this).id;
-     console.log(userSelection);
+$('.subcategory').on('click', function () {
+    userSelection.subcategorySelection = $(this).id;
+    console.log(userSelection);
     $('#main').empty();
 
- });
-
-
+});
 
 //modal functionality
 var modal = document.getElementById('simpleModal');
 var modalBtn = $('#modalBtn');
 var closeBtn = $('#closeBtn');
 $('#modalBtn').on('click', openModal);
-function openModal(){
+
+function openModal() {
     modal.style.display = "block";
 }
+
 $('#closeBtn').on('click', closeModal);
-    function closeModal(){
+
+function closeModal() {
     modal.style.display = "none";
 }
+
 window.addEventListener('click', clickOutside);
-function clickOutside(e){
-    if(e.target == modal){
+
+function clickOutside(e) {
+    if (e.target == modal) {
         modal.style.display = "none";
     }
 }
 
 // Log location Data
-//Done-todo alert needs to be changed to a modal
 var userLocation = {};
 
-//getLocation was messed up, so I fixed it (I think).  Someone check to see if this is correct: -Mark
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else {
         openModal()
     }
-};
+}
 
 function showPosition(position) {
     var latitude = position.coords.latitude;
@@ -104,13 +101,14 @@ function showPosition(position) {
     userLocation.userLatitude = latitude;
     userLocation.userLongitude = longitude;
 }
-getLocation(); 
+
+getLocation();
+
+var destination;
 
 
 function googleApiCall() {
     console.log('making api call');
-    // var type = 'restaurant';
-    // var subcategory = 'mexican';
     var url = 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?';
     var apiKey = 'AIzaSyCUM6ziq10bpobC1rqrO3O9LGJwgzUTJEA';
     var combinedLocation = userLocation.userLatitude + "," + userLocation.userLongitude;
@@ -128,21 +126,72 @@ function googleApiCall() {
     }).then(function (response) {
         console.log(response);
         $('#main').empty();
+        $('#title').text("Take Me To...").css("font-size", "12vw");
         for (i = 0; i < 3; i++) {
-            // console.log(response.results[i].vicinity);
-            // console.log(response.results[i].geometry.location);
-            // console.log(response.results[i].name);
-            // console.log(response.results[i].place_id);
-            var result = $('<div datatype="">');
+            var result = $('<div>');
             result.attr('placeId', response.results[i].place_id);
             result.attr('latitude', response.results[i].geometry.location.lat);
             result.attr('longitude', response.results[i].geometry.location.lng);
-            var locationInformation = $('<p>');
-            locationInformation.append(response.results[i].name);
-            locationInformation.append($('<br>'));
+            result.addClass('option');
+            var name = $('<div class="nameDiv">');
+            var locationInformation = $('<div class="localeInfo">');
+            name.append(response.results[i].name);
             locationInformation.append(response.results[i].vicinity);
+            result.append(name);
             result.append(locationInformation);
+            var row = $('<div>').addClass('row');
+            row.append(result)
+            result.click(function () {
+                $('#main').empty();
+                // userSelection.subCategorySelection = $(this).attr('id');
+                console.log("working");
+                destination = $(this).attr('placeid');
+                console.log(destination);
+                //    declaring map variable
+                var map
+                    // GEO
+                    , infoWindow;
+                //    starting directions services 
+                var directionsDisplay = new google.maps.DirectionsRenderer();
+                var directionsService = new google.maps.DirectionsService();
+
+                //    making sure that map is being read
+                console.log("the map is responding but not displaying")
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: userLocation.userLatitude, lng: userLocation.userLongitude},
+                    zoom: 15
+                });
+                //    updates the content of the map
+                infoWindow = new google.maps.InfoWindow;
+                //    will display direcitons on map
+                directionsDisplay.setMap(map);
+
+                function calculateRoute() {
+                    // input locations here ( need to check why it won get the coordinates)
+                    var request = {
+                        origin: {lat: userLocation.userLatitude, lng: userLocation.userLongitude},
+                        destination: {placeId: destination},
+                        travelMode: 'DRIVING'
+                    };
+                    // displays the locations object in map
+                    directionsService.route(request, function (result, status) {
+                        console.log("im alive just not displaying");
+                        console.log(result, status);
+                        if (status == "OK") {
+                            directionsDisplay.setDirections(result);
+                        }
+                    })
+                }
+
+                // calls the direction to the map
+                calculateRoute();
+            });
             $('#main').append(result);
+
         }
     })
 }
+
+
+
