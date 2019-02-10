@@ -54,16 +54,15 @@ $('.icon').on('click', function () {
 });
 
 
-$('.subcategory').on('click', function () {
-    alert('subcategory click event has been triggered');
-});
 
-$('.subcategory').on('click', function () {
-    userSelection.subcategorySelection = $(this).id;
-    console.log(userSelection);
+
+ $('.subcategory').on('click',function () {
+     userSelection.subcategorySelection=$(this).id;
+     console.log(userSelection);
     $('#main').empty();
 
-});
+ });
+
 
 
 
@@ -72,16 +71,18 @@ var modal = document.getElementById('simpleModal');
 var modalBtn = $('#modalBtn');
 var closeBtn = $('#closeBtn');
 $('#modalBtn').on('click', openModal);
-function openModal() {
+
+function openModal(){
     modal.style.display = "block";
 }
 $('#closeBtn').on('click', closeModal);
-function closeModal() {
+    function closeModal(){
     modal.style.display = "none";
 }
 window.addEventListener('click', clickOutside);
-function clickOutside(e) {
-    if (e.target == modal) {
+function clickOutside(e){
+    if(e.target == modal){
+
         modal.style.display = "none";
     }
 }
@@ -105,9 +106,14 @@ function showPosition(position) {
     userLocation.userLatitude = latitude;
     userLocation.userLongitude = longitude;
 }
+
 getLocation();
 
 var destination;
+
+
+
+
 function googleApiCall() {
     console.log('making api call');
     // var type = 'restaurant';
@@ -130,6 +136,7 @@ function googleApiCall() {
         console.log(response);
         $('#main').empty();
         for (i = 0; i < 3; i++) {
+
             var result = $('<div datatype="">');
             result.attr('placeId', response.results[i].place_id);
             result.attr('latitude', response.results[i].geometry.location.lat);
@@ -139,6 +146,7 @@ function googleApiCall() {
             locationInformation.append($('<br>'));
             locationInformation.append(response.results[i].vicinity);
             result.append(locationInformation);
+
             result.click(function () {
                 $('#main').empty();
                 // userSelection.subCategorySelection = $(this).attr('id');
@@ -183,15 +191,8 @@ function googleApiCall() {
                 // calls the direction to the map
                 calculateRoute();
             })
+
             $('#main').append(result);
         }
     })
 }
-
-
-
-
-
-
-
-
