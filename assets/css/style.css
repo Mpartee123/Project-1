@@ -105,7 +105,8 @@ color: white;
     width: 10%;
 }
 #map{
-    width: 90%;
-    height: 90%;
+    display: block;
+    height:400px;
+    width: 400px;
 }
 
