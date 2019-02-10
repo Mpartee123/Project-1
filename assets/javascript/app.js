@@ -139,7 +139,7 @@ function googleApiCall() {
         for (i = 0; i < 3; i++) {
 
 
-            var result = $('<div>');
+            var result = $('<div class="option mx-auto mt-3>');
             result.attr('placeId', response.results[i].place_id);
             result.attr('latitude', response.results[i].geometry.location.lat);
             result.attr('longitude', response.results[i].geometry.location.lng);
