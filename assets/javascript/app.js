@@ -73,14 +73,32 @@ $(document).on('click', ".sub", function () {
     }
 });
 
+//modal functionality
+var modal = document.getElementById('simpleModal');
+var modalBtn = $('#modalBtn');
+var closeBtn = $('#closeBtn');
+$('#modalBtn').on('click', openModal);
+function openModal(){
+    modal.style.display = "block";
+}
+$('#closeBtn').on('click', closeModal);
+    function closeModal(){
+    modal.style.display = "none";
+}
+window.addEventListener('click', clickOutside);
+function clickOutside(e){
+    if(e.target == modal){
+        modal.style.display = "none";
+    }
+}
 // Log location Data
-//todo alert needs to be changed to a modal
+//Done-todo alert needs to be changed to a modal
 var userLocation = {};
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else {
-        alert("Geolocation is not supported by this browser.");
+        openModal()
     }
 }
 function showPosition(position) {
@@ -89,7 +107,7 @@ function showPosition(position) {
     userLocation.userLatitude = latitude;
     userLocation.uerLongitude = longitude;
 }
-getLocation();
+// getLocation(); don't forget to uncomment this!!
 
 
 var apiKey = 'AIzaSyCUM6ziq10bpobC1rqrO3O9LGJwgzUTJEA';  //Alex's key
