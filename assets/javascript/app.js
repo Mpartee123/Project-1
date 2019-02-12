@@ -222,10 +222,6 @@ function googleApiCall() {
                       stepDisplay.open(map, marker);
                     });
                   }
-
-
-
-
             });
             
             $('#main').append(row);//changed from result to row
