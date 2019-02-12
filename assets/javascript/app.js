@@ -10,17 +10,37 @@ function renderMain() {
         //create row div and img, and append img to row and row to #main
         var row = $('<div>').addClass('row').attr('id', 'row' + i);
         //append img to row
-        var image = $('<img>').addClass('mx-auto mt-5  icon hvr-pulse-grow').attr({'id': cats[i], 'src': srcs[i]});
+        var image = $('<img>').addClass('mx-auto mt-5  icon hvr-pulse-grow').attr({ 'id': cats[i], 'src': srcs[i] });
         row.append(image);
         $('#main').append(row);
     }
 }
-
 renderMain();
+function renderHomeButton() {
+    $('#map').css("display", "none");
+    var homeBtn = $('<img>').attr('src', 'assets/Images/home.png');
+    homeBtn.addClass('home-btn');
+    homeBtn.css({
+        "width": "20%",
+        "display": "block",
+        "margin": "50px auto",
+    });
+    $('#home').append(homeBtn)
+}
+
+$(document).on('click', '.home-btn', function () {
+    $('#main').empty();
+    $('#title-row').empty();
+    $('#map').empty();
+    $('#home').empty();
+    renderMain();
+});
+
 var userSelection = [];
 
 //click on icon to show subcategories
-$('.icon').on('click', function () {
+$(document).on('click', '.icon', function () {
+    renderHomeButton()
     //changes text at top of screen
     $('#title').text("I'm in the mood for...").css("font-size", "8vw");
     // var to store subcategories
@@ -51,14 +71,17 @@ $('.icon').on('click', function () {
 
         })
     }
+    
 });
 
-$('.subcategory').on('click', function () {
-    userSelection.subcategorySelection = $(this).id;
-    console.log(userSelection);
-    $('#main').empty();
 
-});
+
+// $(document).on('click', '.subcategory', function () {
+//     userSelection.subcategorySelection = $(this).id;
+//     console.log(userSelection);
+//     $('#main').empty();
+
+// });
 
 //modal functionality
 var modal = document.getElementById('simpleModal');
@@ -128,6 +151,7 @@ function googleApiCall() {
         console.log(response);
         $('#main').empty();
         $('#title').text("Take Me To...").css("font-size", "12vw");
+        // renderHomeButton();
         for (i = 0; i < 3; i++) {
             var result = $('<div>');
             result.attr('placeId', response.results[i].place_id);
@@ -143,6 +167,7 @@ function googleApiCall() {
             var row = $('<div>').addClass('row');
             row.append(result);
             result.click(function () {
+                $('#map').css("display", "block");
                 $('#main').empty();
                 // userSelection.subCategorySelection = $(this).attr('id');
                 console.log("working");
@@ -167,7 +192,7 @@ function googleApiCall() {
                 console.log("the map is responding but not displaying")
 
                 map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: userLocation.userLatitude, lng: userLocation.userLongitude},
+                    center: { lat: userLocation.userLatitude, lng: userLocation.userLongitude },
                     zoom: 15
                 });
                 // will give the text to the directions
@@ -184,10 +209,12 @@ function googleApiCall() {
                 function calculateRoute() {
                     // input locations here ( need to check why it won get the coordinates)
                     var request = {
+
                         origin: {lat: userLocation.userLatitude, lng: userLocation.userLongitude},
                         destination: {placeId: destination},
 
                         travelMode: driving,
+
 
                     // displays the locations object in map
                     directionsService.route(request, function (result, status) {
@@ -208,6 +235,7 @@ function googleApiCall() {
 
                 // calls the direction to the map
                 calculateRoute();
+
 
                 function showSteps(directionResult, markerArray, stepDisplay, map) {
                     // For each step, place a marker, and add the text to the marker's infowindow.
@@ -240,9 +268,14 @@ function googleApiCall() {
                 calculateRoute();
             });
 
+                
+            });
+
+
             $('#main').append(row);//changed from result to row
 
         }
+        // renderHomeButton();
     })
 }
 
