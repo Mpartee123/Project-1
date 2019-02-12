@@ -152,10 +152,14 @@ function googleApiCall() {
                 var map
                     // GEO
                     , infoWindow;
+
                     // array to hold markers created
                     var markerArray = [];
                     
                     //    starting directions services 
+
+                //    starting directions services 
+
                 var directionsDisplay = new google.maps.DirectionsRenderer();
                 var directionsService = new google.maps.DirectionsService();
 
@@ -172,14 +176,19 @@ function googleApiCall() {
                 var driving = google.maps.DirectionsTravelMode.DRIVING;
                 //    updates the content of the map
                 infoWindow = new google.maps.InfoWindow;
-                
+
+                //    will display direcitons on map
+                directionsDisplay.setMap(map);
+
+
                 function calculateRoute() {
                     // input locations here ( need to check why it won get the coordinates)
                     var request = {
                         origin: {lat: userLocation.userLatitude, lng: userLocation.userLongitude},
                         destination: {placeId: destination},
+
                         travelMode: driving,
-                    };
+
                     // displays the locations object in map
                     directionsService.route(request, function (result, status) {
                         console.log("im alive just not displaying");
@@ -193,6 +202,7 @@ function googleApiCall() {
                         }
                     })
                 }
+
                 //    will display direcitons on map
                 directionsDisplay.setMap(map);
 
@@ -224,6 +234,12 @@ function googleApiCall() {
                   }
             });
             
+
+
+                // calls the direction to the map
+                calculateRoute();
+            });
+
             $('#main').append(row);//changed from result to row
 
         }
