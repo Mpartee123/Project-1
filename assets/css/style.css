@@ -116,8 +116,9 @@ body {
 
 #map {
   display: none;
-  height: 350px;
+  height: 105vw;
   width: 100%;
+  color: black;
 }
 
 /*# sourceMappingURL=style.css.map */
