@@ -13,11 +13,7 @@ body {
   height: 20vw;
 }
 
-@media (min-width: 500px) {
-  .icon {
-    height: 13vw;
-  }
-}
+
 
 .row .sub {
   font-size: 12vw;
@@ -119,8 +115,9 @@ body {
 }
 
 #map {
-  display: block;
+  display: none;
   height: 350px;
   width: 100%;
 }
+
 /*# sourceMappingURL=style.css.map */

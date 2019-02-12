@@ -2,11 +2,7 @@
 $mainColor: rgb(38, 156, 224);
 $desktop: 500px;
 //Sass media query mixin
-@mixin desktop{
-    @media (min-width: #{$desktop}){
-        @content;
-    }
-}
+
 body{background-color: black;
 color: white;
 }
@@ -105,8 +101,8 @@ color: white;
     width: 10%;
 }
 #map{
-    display: block;
     height: 350px;
     width: 100%;
+    display: none;
 }
 
