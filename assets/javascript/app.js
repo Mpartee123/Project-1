@@ -71,7 +71,7 @@ $(document).on('click', '.icon', function () {
 
         })
     }
-    
+
 });
 
 
@@ -175,50 +175,42 @@ function googleApiCall() {
                 console.log(destination);
                 //    declaring map variable
                 var map
-                    // GEO
-                    , infoWindow;
-
-                    // array to hold markers created
-                    var markerArray = [];
-                    
-                    //    starting directions services 
 
                 //    starting directions services 
+                var markerArray = [];
 
                 var directionsDisplay = new google.maps.DirectionsRenderer();
-                var directionsService = new google.maps.DirectionsService();
-
-                //    making sure that map is being read
-                console.log("the map is responding but not displaying")
 
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: { lat: userLocation.userLatitude, lng: userLocation.userLongitude },
                     zoom: 15
                 });
-                // will give the text to the directions
-                var stepDisplay = new google.maps.InfoWindow;
 
-                var driving = google.maps.DirectionsTravelMode.DRIVING;
+                var directionsService = new google.maps.DirectionsService();
+                var stepDisplay = new google.maps.InfoWindow;
+                 var driving = google.maps.DirectionsTravelMode.DRIVING;
                 //    updates the content of the map
                 infoWindow = new google.maps.InfoWindow;
 
                 //    will display direcitons on map
-                directionsDisplay.setMap(map);
 
 
                 function calculateRoute() {
+                    // console.log(moment().format('LTS'));
+                    // var currentTime = moment().format('LTS');
                     // input locations here ( need to check why it won get the coordinates)
                     var request = {
-
-                        origin: {lat: userLocation.userLatitude, lng: userLocation.userLongitude},
-                        destination: {placeId: destination},
-
+                      origin: { lat: userLocation.userLatitude, lng: userLocation.userLongitude },
+                        destination: { placeId: destination },
                         travelMode: driving,
-
+                        // drivingOptions: {
+                        // departureTime: new Date(Date.now()),
+                        // trafficModel: 'pessimistic'
+                        // }
+                    };
 
                     // displays the locations object in map
                     directionsService.route(request, function (result, status) {
-                        console.log("im alive just not displaying");
                         console.log(result, status);
                         if (status == "OK") {
                             document.getElementById('warnings-panel').innerHTML = '<b>' + result.routes[0].warnings + '</b>';
@@ -230,47 +222,35 @@ function googleApiCall() {
                     })
                 }
 
-                //    will display direcitons on map
                 directionsDisplay.setMap(map);
-
                 // calls the direction to the map
                 calculateRoute();
-
-
+              
                 function showSteps(directionResult, markerArray, stepDisplay, map) {
                     // For each step, place a marker, and add the text to the marker's infowindow.
                     // Also attach the marker to an array so we can keep track of it and remove it
                     // when calculating new routes.
                     var myRoute = directionResult.routes[0].legs[0];
                     for (var i = 0; i < myRoute.steps.length; i++) {
-                      var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
-                      marker.setMap(map);
-                      marker.setPosition(myRoute.steps[i].start_location);
-                      attachInstructionText(
-                          stepDisplay, marker, myRoute.steps[i].instructions, map);
+
+                        var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
+                        marker.setMap(map);
+                        marker.setPosition(myRoute.steps[i].start_location);
+                        attachInstructionText(
+                            stepDisplay, marker, myRoute.steps[i].instructions, map);
                     }
                     console.log(myRoute.steps[0].instructions)
-                  }
+                }
 
-                  function attachInstructionText(stepDisplay, marker, text, map) {
-                    google.maps.event.addListener(marker, 'click', function() {
-                      // Open an info window when the marker is clicked on, containing the text
-                      // of the step.
-                      stepDisplay.setContent(text);
-                      stepDisplay.open(map, marker);
+                function attachInstructionText(stepDisplay, marker, text, map) {
+                    google.maps.event.addListener(marker, 'click', function () {
+                        // Open an info window when the marker is clicked on, containing the text
+                        // of the step.
+                        stepDisplay.setContent(text);
+                        stepDisplay.open(map, marker);
                     });
-                  }
-            });
-            
-
-
-                // calls the direction to the map
-                calculateRoute();
-            });
-
-                
-            });
-
+                }
+            })
 
             $('#main').append(row);//changed from result to row
 
