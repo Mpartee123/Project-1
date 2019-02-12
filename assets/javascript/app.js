@@ -41,7 +41,7 @@ $('.icon').on('click', function () {
         var subText = subCategories[clickedIcon][i];
         var row = $('<div>').addClass('row');
         // var subDiv = $('<div>').text(subText).addClass('sub mx-auto mt-5').attr('id', subText);
-        var subDiv = $('<div>').text(subText).addClass('sub option').attr('id', subText);
+        var subDiv = $('<div>').text(subText).addClass('mx-auto mt-4 sub option').attr('id', subText);
         $('#main').append(row);
         row.append(subDiv);
         subDiv.click(function () {
@@ -117,10 +117,11 @@ function googleApiCall() {
         data: {
             'key': apiKey,
             'location': combinedLocation,
-            'radius': 10000,
+            // 'radius': 10000,
             'keyword': userSelection.subCategorySelection,
             'name': userSelection.typeSelection,
             'opennow': true,
+            'rankby': 'distance',
         }
 
     }).then(function (response) {
@@ -132,9 +133,9 @@ function googleApiCall() {
             result.attr('placeId', response.results[i].place_id);
             result.attr('latitude', response.results[i].geometry.location.lat);
             result.attr('longitude', response.results[i].geometry.location.lng);
-            result.addClass('option');
-            var name = $('<div class="nameDiv">');
-            var locationInformation = $('<div class="localeInfo">');
+            result.addClass('option mx-auto mt-4');
+            var name = $('<div>').addClass('nameDiv');
+            var locationInformation = $('<div>').addClass('localeInfo')
             name.append(response.results[i].name);
             locationInformation.append(response.results[i].vicinity);
             result.append(name);
@@ -187,7 +188,7 @@ function googleApiCall() {
                 // calls the direction to the map
                 calculateRoute();
             });
-            $('#main').append(result);
+            $('#main').append(row);//changed from result to row
 
         }
     })
