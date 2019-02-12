@@ -115,8 +115,9 @@ body {
 }
 
 #map {
-  display: none;
+  display: block;
   height: 105vw;
+  display: none;
   width: 100%;
   color: black;
 }
