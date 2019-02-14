@@ -10,12 +10,14 @@ function renderMain() {
         //create row div and img, and append img to row and row to #main
         var row = $('<div>').addClass('row').attr('id', 'row' + i);
         //append img to row
-        var image = $('<img>').addClass('mx-auto mt-5  icon hvr-pulse-grow').attr({ 'id': cats[i], 'src': srcs[i] });
+        var image = $('<img>').addClass('mx-auto mt-5  icon hvr-pulse-grow').attr({'id': cats[i], 'src': srcs[i]});
         row.append(image);
         $('#main').append(row);
     }
 }
+
 renderMain();
+
 function renderHomeButton() {
     $('#map').css("display", "none");
     var homeBtn = $('<img>').attr('src', 'assets/Images/home.png');
@@ -40,12 +42,11 @@ var userSelection = [];
 
 //click on icon to show subcategories
 $(document).on('click', '.icon', function () {
-    renderHomeButton()
+    renderHomeButton();
     //changes text at top of screen
     $('#title').text("I'm in the mood for...").css("font-size", "8vw");
     // var to store subcategories
     var subCategories = {
-
         Food: ['Italian', 'Thai', 'American'],
         Shopping: ['Groceries', 'General', 'Mall'],
         Entertainment: ['Movie', 'Bar', 'Yoga']
@@ -53,7 +54,6 @@ $(document).on('click', '.icon', function () {
     var clickedIcon = $(this).attr('id');
     userSelection.typeSelection = clickedIcon;
     console.log(userSelection);
-    var subText = '';
     //clear icons
     $('#main').empty();
     //display 3 sub-categories
@@ -74,37 +74,21 @@ $(document).on('click', '.icon', function () {
 
 });
 
-
-
-// $(document).on('click', '.subcategory', function () {
-//     userSelection.subcategorySelection = $(this).id;
-//     console.log(userSelection);
-//     $('#main').empty();
-
-// });
-
-//modal functionality
-var modal = document.getElementById('simpleModal');
-var modalBtn = $('#modalBtn');
-var closeBtn = $('#closeBtn');
-$('#modalBtn').on('click', openModal);
-
 function openModal() {
+
+    var modal = document.getElementById('simpleModal');
+
     modal.style.display = "block";
-}
 
-$('#closeBtn').on('click', closeModal);
-
-function closeModal() {
-    modal.style.display = "none";
-}
-
-window.addEventListener('click', clickOutside);
-
-function clickOutside(e) {
-    if (e.target == modal) {
+    $('#closeBtn').on('click', function () {
         modal.style.display = "none";
-    }
+    });
+
+    window.addEventListener('click', function (e) {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
 }
 
 // Log location Data
@@ -129,13 +113,12 @@ getLocation();
 
 var destination;
 
-
 function googleApiCall() {
     console.log('making api call');
     var url = 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?';
     var apiKey = 'AIzaSyCUM6ziq10bpobC1rqrO3O9LGJwgzUTJEA';
     var combinedLocation = userLocation.userLatitude + "," + userLocation.userLongitude;
-    console.log(combinedLocation);
+    console.log('Returned Lat and Long is ' + combinedLocation);
     $.ajax(url, {
         data: {
             'key': apiKey,
@@ -148,18 +131,34 @@ function googleApiCall() {
         }
 
     }).then(function (response) {
-        console.log(response);
+        console.log('API call received');
+        console.log(JSON.parse(JSON.stringify(response)));
         $('#main').empty();
         $('#title').text("Take Me To...").css("font-size", "12vw");
-        // renderHomeButton();
-        for (i = 0; i < 3; i++) {
+
+        var responseLength = '';
+
+        function parseReturnedResults() {
+            if (response.results.length < 3) {
+                responseLength = response.results.length.toString();
+                return responseLength;
+            } else {
+                responseLength = '3';
+                return responseLength;
+            }
+        }
+
+        parseReturnedResults();
+        console.log(response.results.length +' results returned');
+
+        for (i = 0; i < Number(responseLength); i++) {
             var result = $('<div>');
             result.attr('placeId', response.results[i].place_id);
             result.attr('latitude', response.results[i].geometry.location.lat);
             result.attr('longitude', response.results[i].geometry.location.lng);
             result.addClass('option mx-auto mt-4');
-            var name = $('<div>').addClass('nameDiv');
-            var locationInformation = $('<div>').addClass('localeInfo')
+            const name = $('<div>').addClass('nameDiv');
+            var locationInformation = $('<div>').addClass('localeInfo');
             name.append(response.results[i].name);
             locationInformation.append(response.results[i].vicinity);
             result.append(name);
@@ -169,95 +168,96 @@ function googleApiCall() {
             result.click(function () {
                 $('#map').css("display", "block");
                 $('#main').empty();
-                // userSelection.subCategorySelection = $(this).attr('id');
+                $('#title').text(name[0].innerHTML).css("font-size", "12vw");
                 console.log("working");
                 destination = $(this).attr('placeid');
                 console.log(destination);
-                //    declaring map variable
-                var map
+                googleMap();
+            });
 
-                //    starting directions services 
-                var markerArray = [];
-
-                var directionsDisplay = new google.maps.DirectionsRenderer();
-
-                map = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat: userLocation.userLatitude, lng: userLocation.userLongitude },
-                    zoom: 15
-                });
-
-                var directionsService = new google.maps.DirectionsService();
-                var stepDisplay = new google.maps.InfoWindow;
-                 var driving = google.maps.DirectionsTravelMode.DRIVING;
-                //    updates the content of the map
-                infoWindow = new google.maps.InfoWindow;
-
-                //    will display direcitons on map
-
-
-                function calculateRoute() {
-                    // console.log(moment().format('LTS'));
-                    // var currentTime = moment().format('LTS');
-                    // input locations here ( need to check why it won get the coordinates)
-                    var request = {
-                      origin: { lat: userLocation.userLatitude, lng: userLocation.userLongitude },
-                        destination: { placeId: destination },
-                        travelMode: driving,
-                        // drivingOptions: {
-                        // departureTime: new Date(Date.now()),
-                        // trafficModel: 'pessimistic'
-                        // }
-                    };
-
-                    // displays the locations object in map
-                    directionsService.route(request, function (result, status) {
-                        console.log(result, status);
-                        if (status == "OK") {
-                            document.getElementById('warnings-panel').innerHTML = '<b>' + result.routes[0].warnings + '</b>';
-                            directionsDisplay.setDirections(result);
-                            showSteps(result, markerArray, stepDisplay, map);
-                        } else {
-                            window.alert('Directions request failed due to ' + status);
-                        }
-                    })
-                }
-
-                directionsDisplay.setMap(map);
-                // calls the direction to the map
-                calculateRoute();
-              
-                function showSteps(directionResult, markerArray, stepDisplay, map) {
-                    // For each step, place a marker, and add the text to the marker's infowindow.
-                    // Also attach the marker to an array so we can keep track of it and remove it
-                    // when calculating new routes.
-                    var myRoute = directionResult.routes[0].legs[0];
-                    for (var i = 0; i < myRoute.steps.length; i++) {
-
-                        var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
-                        marker.setMap(map);
-                        marker.setPosition(myRoute.steps[i].start_location);
-                        attachInstructionText(
-                            stepDisplay, marker, myRoute.steps[i].instructions, map);
-                    }
-                    console.log(myRoute.steps[0].instructions)
-                }
-
-                function attachInstructionText(stepDisplay, marker, text, map) {
-                    google.maps.event.addListener(marker, 'click', function () {
-                        // Open an info window when the marker is clicked on, containing the text
-                        // of the step.
-                        stepDisplay.setContent(text);
-                        stepDisplay.open(map, marker);
-                    });
-                }
-            })
-
-            $('#main').append(row);//changed from result to row
-
+            $('#main').append(row);
         }
-        // renderHomeButton();
     })
 }
 
+
+function googleMap() {
+    var map;
+
+    //    starting directions services
+    var markerArray = [];
+
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: userLocation.userLatitude, lng: userLocation.userLongitude},
+        zoom: 15
+    });
+
+    var directionsService = new google.maps.DirectionsService();
+    var stepDisplay = new google.maps.InfoWindow;
+    var driving = google.maps.DirectionsTravelMode.DRIVING;
+    //    updates the content of the map
+    infoWindow = new google.maps.InfoWindow;
+
+    //    will display direcitons on map
+
+
+    function calculateRoute() {
+        // console.log(moment().format('LTS'));
+        // var currentTime = moment().format('LTS');
+        // input locations here ( need to check why it won get the coordinates)
+        var request = {
+            origin: {lat: userLocation.userLatitude, lng: userLocation.userLongitude},
+            destination: {placeId: destination},
+            travelMode: driving,
+            // drivingOptions: {
+            // departureTime: new Date(Date.now()),
+            // trafficModel: 'pessimistic'
+            // }
+        };
+
+        // displays the locations object in map
+        directionsService.route(request, function (result, status) {
+            console.log(result, status);
+            if (status === "OK") {
+                document.getElementById('warnings-panel').innerHTML = '<b>' + result.routes[0].warnings + '</b>';
+                directionsDisplay.setDirections(result);
+                showSteps(result, markerArray, stepDisplay, map);
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        })
+    }
+
+    directionsDisplay.setMap(map);
+    // calls the direction to the map
+    calculateRoute();
+
+    function showSteps(directionResult, markerArray, stepDisplay, map) {
+        // For each step, place a marker, and add the text to the marker's infowindow.
+        // Also attach the marker to an array so we can keep track of it and remove it
+        // when calculating new routes.
+        var myRoute = directionResult.routes[0].legs[0];
+        for (var i = 0; i < myRoute.steps.length; i++) {
+
+            var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
+            marker.setMap(map);
+            marker.setPosition(myRoute.steps[i].start_location);
+            attachInstructionText(
+                stepDisplay, marker, myRoute.steps[i].instructions, map);
+        }
+        console.log(myRoute.steps[0].instructions)
+    }
+
+    function attachInstructionText(stepDisplay, marker, text, map) {
+        google.maps.event.addListener(marker, 'click', function () {
+            // Open an info window when the marker is clicked on, containing the text
+            // of the step.
+            stepDisplay.setContent(text);
+            stepDisplay.open(map, marker);
+        });
+    }
+}
 
 
